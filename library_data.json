@@ -1,0 +1,13 @@
+{
+    "books": {
+        "9780807286005": {
+            "name": "Harry Potter and the Philosopher's Stone",
+            "author": "J. K. Rowling",
+            "ISBN": "9780807286005",
+            "quantity": 4,
+            "available": 4
+        }
+    },
+    "members": {},
+    "next_member_ID": 1
+}

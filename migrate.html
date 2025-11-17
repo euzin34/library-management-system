@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Migration Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px 24px;
+            background: white;
+            border: 2px dashed #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .file-input-label:hover {
+            background: #f8f9fa;
+            border-color: #764ba2;
+        }
+
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Data Migration Tool</h1>
+        <p>Migrate your library data from the old Python-based JSON file to the new web application.</p>
+
+        <div class="section">
+            <h2>Option 1: Auto-Migration</h2>
+            <p>If you have <code>library_data.json</code> in the same folder, click below to automatically migrate.</p>
+            <button class="btn" onclick="autoMigrate()">Auto Migrate from library_data.json</button>
+        </div>
+
+        <div class="section">
+            <h2>Option 2: Manual Upload</h2>
+            <p>Upload your JSON file manually.</p>
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" accept=".json" onchange="handleFileUpload(event)">
+                <label for="fileInput" class="file-input-label">
+                    📁 Choose JSON File
+                </label>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Option 3: View Current Data</h2>
+            <button class="btn btn-secondary" onclick="viewCurrentData()">View LocalStorage Data</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="index.html" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                ← Back to Library System
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+
+        async function autoMigrate() {
+            showStatus('Attempting to load library_data.json...', 'info');
+
+            try {
+                const response = await fetch('library_data.json');
+                if (!response.ok) {
+                    throw new Error('library_data.json not found');
+                }
+
+                const data = await response.json();
+                await migrateData(data);
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}. Make sure library_data.json is in the same folder as this file.`, 'error');
+            }
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    await migrateData(data);
+                } catch (error) {
+                    showStatus(`❌ Error parsing JSON: ${error.message}`, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        async function migrateData(oldData) {
+            try {
+                showStatus('🔄 Processing data...', 'info');
+
+                // Transform old data format to new format
+                const newData = {
+                    books: {},
+                    members: {},
+                    nextMemberID: oldData.next_member_ID || 1,
+                    reservations: [],
+                    categories: ['General', 'Fiction', 'Non-Fiction', 'Science', 'Technology', 'History', 'Biography', 'Fantasy', 'Mystery', 'Romance', 'Self-Help', 'Children'],
+                    libraryName: 'Digital Library Management System',
+                    settings: {
+                        borrowPeriodDays: 14,
+                        maxBooksPerMember: 5,
+                        finePerDay: 0.50,
+                        allowReservations: true
+                    }
+                };
+
+                // Migrate books
+                if (oldData.books) {
+                    for (let isbn in oldData.books) {
+                        const oldBook = oldData.books[isbn];
+                        newData.books[isbn] = {
+                            name: oldBook.name,
+                            author: oldBook.author,
+                            ISBN: oldBook.ISBN,
+                            quantity: oldBook.quantity,
+                            available: oldBook.available,
+                            category: 'General',
+                            description: '',
+                            coverImage: null,
+                            ratings: [],
+                            reviews: [],
+                            totalBorrowCount: 0,
+                            dateAdded: new Date().toISOString()
+                        };
+                    }
+                }
+
+                // Migrate members
+                if (oldData.members) {
+                    for (let id in oldData.members) {
+                        const oldMember = oldData.members[id];
+
+                        // Convert old borrowed_book_isbns to new format
+                        const booksBorrowed = [];
+                        if (oldMember.borrowed_book_isbns && oldMember.borrowed_book_isbns.length > 0) {
+                            oldMember.borrowed_book_isbns.forEach(isbn => {
+                                const book = newData.books[isbn];
+                                const borrowDate = new Date();
+                                const dueDate = new Date(borrowDate.getTime() + (14 * 24 * 60 * 60 * 1000));
+
+                                booksBorrowed.push({
+                                    isbn: isbn,
+                                    bookName: book ? book.name : 'Unknown Book',
+                                    borrowDate: borrowDate.toISOString(),
+                                    dueDate: dueDate.toISOString(),
+                                    returnDate: null,
+                                    isOverdue: false
+                                });
+                            });
+                        }
+
+                        newData.members[id] = {
+                            name: oldMember.name,
+                            id: oldMember.id,
+                            phone: oldMember.phone,
+                            email: oldMember.email,
+                            address: oldMember.address,
+                            profilePicture: null,
+                            booksBorrowed: booksBorrowed,
+                            readingHistory: [],
+                            dateJoined: new Date().toISOString(),
+                            totalBooksBorrowed: booksBorrowed.length,
+                            overdueCount: 0,
+                            currentFines: 0
+                        };
+                    }
+                }
+
+                // Save to LocalStorage
+                localStorage.setItem('libraryManagementSystem', JSON.stringify(newData));
+
+                showStatus(`
+                    ✅ Migration successful!<br><br>
+                    📚 Books migrated: ${Object.keys(newData.books).length}<br>
+                    👥 Members migrated: ${Object.keys(newData.members).length}<br>
+                    📖 Active borrows: ${Object.values(newData.members).reduce((sum, m) => sum + m.booksBorrowed.length, 0)}<br><br>
+                    <a href="index.html" style="color: #155724; font-weight: bold;">Open Library System →</a>
+                `, 'success');
+
+            } catch (error) {
+                showStatus(`❌ Migration failed: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        function viewCurrentData() {
+            const data = localStorage.getItem('libraryManagementSystem');
+
+            if (!data) {
+                showStatus('ℹ️ No data found in LocalStorage.', 'info');
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(data);
+                const booksCount = Object.keys(parsed.books || {}).length;
+                const membersCount = Object.keys(parsed.members || {}).length;
+
+                showStatus(`
+                    📊 Current Data Summary:<br><br>
+                    📚 Books: ${booksCount}<br>
+                    👥 Members: ${membersCount}<br>
+                    📦 Next Member ID: ${parsed.nextMemberID}<br><br>
+                    <details>
+                        <summary style="cursor: pointer; font-weight: bold; margin-bottom: 10px;">View Raw JSON</summary>
+                        <pre>${JSON.stringify(parsed, null, 2)}</pre>
+                    </details>
+                `, 'info');
+            } catch (error) {
+                showStatus(`❌ Error reading data: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

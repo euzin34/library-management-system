@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Library Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span class="logo-text">Library Management</span>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn active" data-section="dashboard">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="nav-btn" data-section="books">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>Books</span>
+                    </button>
+                    <button class="nav-btn" data-section="members">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Members</span>
+                    </button>
+                    <button class="nav-btn" data-section="transactions">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                        <span>Transactions</span>
+                    </button>
+                </nav>
+                <div class="header-actions">
+                    <button class="btn-icon" id="darkModeToggle" title="Toggle Dark Mode">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" id="saveData" title="Save Data">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" id="settingsBtn" title="Settings">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m-6-6h6m6 0h6M4.22 4.22l4.24 4.24m7.07 7.07l4.24 4.24M19.78 4.22l-4.24 4.24m-7.07 7.07l-4.24 4.24"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" id="refreshStats">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon books-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalBooksCount">0</h3>
+                            <p>Total Books</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon members-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalMembersCount">0</h3>
+                            <p>Total Members</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon borrowed-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="borrowedBooksCount">0</h3>
+                            <p>Borrowed Books</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon overdue-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="overdueBooksCount">0</h3>
+                            <p>Overdue Books</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="dashboard-column">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Popular Books</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="popularBooksList" class="list-container">
+                                    <p class="empty-state">No data available</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Recent Activity</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="recentActivityList" class="list-container">
+                                    <p class="empty-state">No recent activity</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-column">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Top Rated Books</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="topRatedBooksList" class="list-container">
+                                    <p class="empty-state">No rated books yet</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Categories</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="categoriesChart" class="categories-grid">
+                                    <p class="empty-state">No books available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Books Section -->
+            <section id="books" class="section">
+                <div class="section-header">
+                    <h1>Books Management</h1>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" id="addBookBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add Book
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="searchBooks" placeholder="Search books by title, author, or ISBN...">
+                    </div>
+                    <select id="filterCategory" class="filter-select">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select id="filterAvailability" class="filter-select">
+                        <option value="">All Books</option>
+                        <option value="available">Available</option>
+                        <option value="borrowed">Borrowed</option>
+                    </select>
+                </div>
+
+                <div id="booksGrid" class="books-grid">
+                    <p class="empty-state">No books available. Add some books to get started!</p>
+                </div>
+            </section>
+
+            <!-- Members Section -->
+            <section id="members" class="section">
+                <div class="section-header">
+                    <h1>Members Management</h1>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" id="addMemberBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add Member
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="searchMembers" placeholder="Search members by name, ID, or email...">
+                    </div>
+                    <select id="filterMemberStatus" class="filter-select">
+                        <option value="">All Members</option>
+                        <option value="active">Active (Has borrowed books)</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div id="membersTable" class="table-container">
+                    <p class="empty-state">No members registered. Register members to get started!</p>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions" class="section">
+                <div class="section-header">
+                    <h1>Borrow & Return</h1>
+                </div>
+
+                <div class="transactions-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Borrow Book</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="borrowForm" class="form">
+                                <div class="form-group">
+                                    <label for="borrowMemberId">Member ID</label>
+                                    <input type="text" id="borrowMemberId" placeholder="e.g., M0001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="borrowBookISBN">Book ISBN</label>
+                                    <input type="text" id="borrowBookISBN" placeholder="Enter ISBN" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Borrow Book</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Return Book</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="returnForm" class="form">
+                                <div class="form-group">
+                                    <label for="returnMemberId">Member ID</label>
+                                    <input type="text" id="returnMemberId" placeholder="e.g., M0001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="returnBookISBN">Book ISBN</label>
+                                    <input type="text" id="returnBookISBN" placeholder="Enter ISBN" required>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block">Return Book</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Active Borrows</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="activeBorrowsTable" class="table-container">
+                            <p class="empty-state">No active borrows</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Add Book Modal -->
+    <div id="addBookModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add New Book</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addBookForm" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookTitle">Book Title *</label>
+                            <input type="text" id="bookTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookAuthor">Author *</label>
+                            <input type="text" id="bookAuthor" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookISBN">ISBN *</label>
+                            <input type="text" id="bookISBN" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookQuantity">Quantity *</label>
+                            <input type="number" id="bookQuantity" min="1" value="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookCategory">Category</label>
+                            <select id="bookCategory">
+                                <!-- Categories will be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookCover">Cover Image URL (optional)</label>
+                            <input type="url" id="bookCover" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookDescription">Description</label>
+                        <textarea id="bookDescription" rows="3" placeholder="Brief description of the book..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="addMemberModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Register New Member</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addMemberForm" class="form">
+                    <div class="form-group">
+                        <label for="memberName">Full Name *</label>
+                        <input type="text" id="memberName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="memberEmail">Email *</label>
+                            <input type="email" id="memberEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberPhone">Phone *</label>
+                            <input type="tel" id="memberPhone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberAddress">Address</label>
+                        <textarea id="memberAddress" rows="2" placeholder="Enter full address..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberPhoto">Profile Picture URL (optional)</label>
+                        <input type="url" id="memberPhoto" placeholder="https://...">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Register Member</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Data Management</h3>
+                    <div class="settings-actions">
+                        <button class="btn btn-secondary" id="exportDataBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export Data (JSON)
+                        </button>
+                        <button class="btn btn-secondary" id="importDataBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Import Data (JSON)
+                        </button>
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Library Settings</h3>
+                    <div class="form-group">
+                        <label for="borrowPeriodDays">Borrow Period (days)</label>
+                        <input type="number" id="borrowPeriodDays" min="1" max="90" value="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxBooksPerMember">Max Books Per Member</label>
+                        <input type="number" id="maxBooksPerMember" min="1" max="20" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="finePerDay">Fine Per Day ($)</label>
+                        <input type="number" id="finePerDay" min="0" max="10" step="0.01" value="0.50">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Danger Zone</h3>
+                    <button class="btn btn-danger" id="clearAllDataBtn">
+                        Clear All Data
+                    </button>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div id="bookDetailsModal" class="modal-overlay">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Book Details</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="bookDetailsContent">
+                <!-- Content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Details Modal -->
+    <div id="memberDetailsModal" class="modal-overlay">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Member Details</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="memberDetailsContent">
+                <!-- Content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/book.js"></script>
+    <script src="js/member.js"></script>
+    <script src="js/library.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
